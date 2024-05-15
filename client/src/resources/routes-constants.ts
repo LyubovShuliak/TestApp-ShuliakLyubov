@@ -1,3 +1,3 @@
 export const ROUTES = {
-    HOMEPAGE_ROUTE: '/'
+    BOARD_ROUTE: { route: '/board', name: 'Board'}
 }

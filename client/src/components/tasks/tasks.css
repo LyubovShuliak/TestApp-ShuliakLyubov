@@ -1,0 +1,30 @@
+.container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.column {
+    margin: 8px;
+    border: 1px solid lightgrey;
+    border-radius: 2px;
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+}
+
+.task-list {
+    padding: 8px;
+    transition: background-color 0.2s ease;
+    background-color: inherit;
+    flex-grow: 1;
+    min-height: 100px;
+}
+
+.task {
+    border: 1px solid lightgrey;
+    border-radius: 2px;
+    padding: 8px;
+    margin-bottom: 8px;
+    background-color: white;
+}
