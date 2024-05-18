@@ -1,0 +1,17 @@
+{
+  "name": "testapp-shuliaklyubov",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npm run start --prefix server",
+    "build": "npm run build --prefix server"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "react-draggable": "^4.4.6"
+  }
+}
