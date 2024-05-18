@@ -1,13 +1,9 @@
 import React from 'react';
-import { ActionFunction, createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter } from 'react-router-dom';
 
 import App from '../App';
-import {ROUTES} from "../resources/routes-constants";
-import {  BoardPage} from "../pages/BoardPage";
-
-
-
-
+import { BoardPage } from '../pages/BoardPage';
+import { ROUTES } from '../resources/routes-constants';
 
 export const router = createBrowserRouter(
   [
@@ -17,12 +13,15 @@ export const router = createBrowserRouter(
       // errorElement: <ErrorPage />,
 
       children: [
+        {
+          path: '/',
+          element: <BoardPage />,
+        },
 
         {
           path: ROUTES.BOARD_ROUTE.route,
-          element: <BoardPage/>,
-
-        }
+          element: <BoardPage />,
+        },
       ],
     },
     // {

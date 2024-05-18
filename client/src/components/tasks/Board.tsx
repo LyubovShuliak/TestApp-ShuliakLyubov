@@ -1,21 +1,10 @@
-import React, { useState } from 'react';
-import {
-  DragDropContext,
-  Droppable,
-  Draggable,
-  DropResult,
-} from 'react-beautiful-dnd';
 import './tasks.css';
-interface Task {
-  id: string;
-  content: string;
-}
+import React, { useState } from 'react';
 
-interface Column {
-  id: string;
-  title: string;
-  taskIds: string[];
-}
+import { Task } from './TaskItem';
+import { Column, TaskList } from './TasksList';
+
+import { DragDropContext, DropResult } from '@hello-pangea/dnd';
 
 interface InitialData {
   tasks: {
@@ -27,35 +16,12 @@ interface InitialData {
   columnOrder: string[];
 }
 
-const initialData: InitialData = {
-  tasks: {
-    'task-1': { id: 'task-1', content: 'Take out the garbage' },
-    'task-2': { id: 'task-2', content: 'Watch my favorite show' },
-    'task-3': { id: 'task-3', content: 'Charge my phone' },
-    'task-4': { id: 'task-4', content: 'Cook dinner' },
-  },
-  columns: {
-    'column-1': {
-      id: 'column-1',
-      title: 'To Do',
-      taskIds: ['task-1', 'task-2', 'task-3', 'task-4'],
-    },
-    'column-2': {
-      id: 'column-2',
-      title: 'In Progress',
-      taskIds: [],
-    },
-    'column-3': {
-      id: 'column-3',
-      title: 'Done',
-      taskIds: [],
-    },
-  },
-  columnOrder: ['column-1', 'column-2', 'column-3'],
-};
-
 export const Board: React.FC = () => {
-  const [data, setData] = useState<InitialData>(initialData);
+  const [data, setData] = useState<InitialData>({
+    tasks: {},
+    columns: {},
+    columnOrder: [],
+  });
 
   const onDragEnd = (result: DropResult) => {
     const { destination, source, draggableId } = result;
@@ -130,58 +96,9 @@ export const Board: React.FC = () => {
           const column = data.columns[columnId];
           const tasks = column.taskIds.map((taskId) => data.tasks[taskId]);
 
-          return <Column key={column.id} column={column} tasks={tasks} />;
+          return <TaskList key={column.id} column={column} tasks={tasks} />;
         })}
       </div>
     </DragDropContext>
-  );
-};
-
-interface ColumnProps {
-  column: Column;
-  tasks: Task[];
-}
-
-const Column: React.FC<ColumnProps> = ({ column, tasks }) => {
-  return (
-    <div className="column">
-      <h3>{column.title}</h3>
-      <Droppable droppableId={column.id}>
-        {(provided) => (
-          <div
-            className="task-list"
-            {...provided.droppableProps}
-            ref={provided.innerRef}
-          >
-            {tasks.map((task, index) => (
-              <Task key={task.id} task={task} index={index} />
-            ))}
-            {provided.placeholder}
-          </div>
-        )}
-      </Droppable>
-    </div>
-  );
-};
-
-interface TaskProps {
-  task: Task;
-  index: number;
-}
-
-const Task: React.FC<TaskProps> = ({ task, index }) => {
-  return (
-    <Draggable draggableId={task.id} index={index}>
-      {(provided: any) => (
-        <div
-          className="task"
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
-          ref={provided.innerRef}
-        >
-          {task.content}
-        </div>
-      )}
-    </Draggable>
   );
 };

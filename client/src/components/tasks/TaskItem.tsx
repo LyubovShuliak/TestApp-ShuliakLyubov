@@ -1,11 +1,28 @@
-import React, { FC } from 'react';
-type TaskProps = {
-  taskId: string;
-};
-export const TaskItem: FC<TaskProps> = ({ taskId }) => {
+import React from 'react';
+
+import { Draggable } from '@hello-pangea/dnd';
+export interface Task {
+  id: string;
+  content: string;
+}
+interface TaskProps {
+  task: Task;
+  index: number;
+}
+
+export const TaskItem: React.FC<TaskProps> = ({ task, index }) => {
   return (
-    <div>
-      <h1>{taskId}</h1>
-    </div>
+    <Draggable draggableId={task.id} index={index}>
+      {(provided: any) => (
+        <div
+          className="task"
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+          ref={provided.innerRef}
+        >
+          {task.content}
+        </div>
+      )}
+    </Draggable>
   );
 };

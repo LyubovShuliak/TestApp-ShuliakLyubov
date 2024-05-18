@@ -1,11 +1,12 @@
 import React from 'react';
-
 import { Outlet } from 'react-router-dom';
+
+import Header from './components/header/Header';
 
 const App: React.FC = () => {
   return (
     <div>
-      <h1> Home</h1>
+      <Header />
       <Outlet />
     </div>
   );
