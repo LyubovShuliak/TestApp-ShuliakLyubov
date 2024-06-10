@@ -107,7 +107,7 @@ This is the structure of the files in the project:
     ├── src                     # source files
     │   ├── components
     │   ├── pages
-    │   ├── resources           # images, constants and other static resources
+    │   ├── resources           # images, utils and other static resources
     │   ├── store               # Redux store
     │   │   ├── actions         # store's actions
     │   │   └── reducers        # store's reducers

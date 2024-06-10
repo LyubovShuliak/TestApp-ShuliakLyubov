@@ -8,6 +8,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
   UnprocessableEntityException,
   UseGuards,
 } from '@nestjs/common';
@@ -48,22 +49,25 @@ export class BoardController {
   findAll() {
     return this.boardService.findAll();
   }
-  @Get('search/:query')
-  async search(@Param('query') query: string) {
+  @Get('search')
+  async search(@Query('query') query?: string) {
     return await this.boardService.search(query);
   }
-
+  @Get('hash/:hash')
+  findOneByHash(@Param('hash') hash: string) {
+    return this.boardService.findOneByHash(hash);
+  }
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.boardService.findOne(id);
   }
 
   @Patch(':id')
-  update(
+  async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateBoardDto: UpdateBoardDto,
   ) {
-    return this.boardService.update(id, updateBoardDto);
+    return await this.boardService.update(id, updateBoardDto);
   }
 
   @Delete(':id')

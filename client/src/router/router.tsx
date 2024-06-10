@@ -3,7 +3,7 @@ import { createBrowserRouter } from 'react-router-dom';
 
 import App from '../App';
 import { BoardPage } from '../pages/BoardPage';
-import { ROUTES } from '../resources/routes-constants';
+import { ROUTES } from '../resources/constants/routes-constants';
 
 export const router = createBrowserRouter(
   [
@@ -14,12 +14,7 @@ export const router = createBrowserRouter(
 
       children: [
         {
-          path: '/',
-          element: <BoardPage />,
-        },
-
-        {
-          path: ROUTES.BOARD_ROUTE.route,
+          path: `${ROUTES.BOARD_ROUTE.route}/*`,
           element: <BoardPage />,
         },
       ],

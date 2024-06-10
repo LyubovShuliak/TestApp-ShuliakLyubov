@@ -1,4 +1,7 @@
-import { api, createAnonymousUser } from '../../../resources/api-constants';
+import {
+  api,
+  createAnonymousUser,
+} from '../../../resources/constants/api-constants';
 import { Board } from '../board/board.types';
 
 import { User } from './user.types';

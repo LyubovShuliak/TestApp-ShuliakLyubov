@@ -27,34 +27,34 @@ export class UsersController {
     private readonly usersService: UsersService,
     private jwtService: JwtService,
   ) {}
-  @Post('oauth2callback')
-  @UseGuards(JwtGuard)
-  async oauthCallback(
-    @Body() { code }: { code: string },
-    @Res({ passthrough: true }) res: Response,
-    @Req() req: Request,
-  ) {
-    const user = await this.usersService.authorize(code);
-    res.cookie(
-      'session',
-      this.jwtService.sign(user, {
-        expiresIn: '1d',
-        secret: jwtConstants.secret,
-      }),
-      {
-        httpOnly: process.env.NODE_ENV === 'production',
-        secure: process.env.NODE_ENV === 'production',
-        signed: process.env.NODE_ENV === 'production',
-      },
-    );
-    res.cookie('status', true, {
-      httpOnly: process.env.NODE_ENV === 'production',
-      secure: process.env.NODE_ENV === 'production',
-      signed: process.env.NODE_ENV === 'production',
-    });
-
-    return { name: user.name, status: true };
-  }
+  // @Post('oauth2callback')
+  // @UseGuards(JwtGuard)
+  // async oauthCallback(
+  //   @Body() { code }: { code: string },
+  //   @Res({ passthrough: true }) res: Response,
+  //   @Req() req: Request,
+  // ) {
+  //   const user = await this.usersService.authorize(code);
+  //   res.cookie(
+  //     'session',
+  //     this.jwtService.sign(user, {
+  //       expiresIn: '1d',
+  //       secret: jwtConstants.secret,
+  //     }),
+  //     {
+  //       httpOnly: process.env.NODE_ENV === 'production',
+  //       secure: process.env.NODE_ENV === 'production',
+  //       signed: process.env.NODE_ENV === 'production',
+  //     },
+  //   );
+  //   res.cookie('status', true, {
+  //     httpOnly: process.env.NODE_ENV === 'production',
+  //     secure: process.env.NODE_ENV === 'production',
+  //     signed: process.env.NODE_ENV === 'production',
+  //   });
+  //
+  //   return { name: user.name, status: true };
+  // }
 
   @Post()
   async createAnonymousUser(

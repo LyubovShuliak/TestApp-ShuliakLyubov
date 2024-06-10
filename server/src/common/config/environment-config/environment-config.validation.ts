@@ -29,10 +29,10 @@ class EnvironmentVariables {
   @IsString()
   ORIGIN: string;
 
-  @IsString()
-  GOOGLE_CLIENT_ID: string;
-  @IsString()
-  GOOGLE_CLIENT_SECRET: string;
+  // @IsString()
+  // GOOGLE_CLIENT_ID: string;
+  // @IsString()
+  // GOOGLE_CLIENT_SECRET: string;
   @IsString()
   SECRET: string;
   @IsString()

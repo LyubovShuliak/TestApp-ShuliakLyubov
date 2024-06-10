@@ -1,28 +1,27 @@
-import './tasks.css';
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 
-import { Task } from './TaskItem';
-import { Column, TaskList } from './TasksList';
+import { PADDING } from '../../resources/constants/gutter.constants';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import {
+  changeTasks,
+  setTasksAndColumnsFromCache,
+} from '../../store/slices/tasks/tasks.slice';
+import { reorderTask } from '../../store/slices/tasks/tasks.thunk';
+import { TaskColumnName } from '../../store/slices/tasks/tasks.types';
+
+import { TaskColumn } from './TaskColumn';
 
 import { DragDropContext, DropResult } from '@hello-pangea/dnd';
+import { Stack } from '@mui/material';
 
-interface InitialData {
-  tasks: {
-    [key: string]: Task;
-  };
-  columns: {
-    [key: string]: Column;
-  };
-  columnOrder: string[];
-}
+export const Board: React.FC<{
+  containerRef: React.MutableRefObject<HTMLDivElement | null>;
+}> = ({ containerRef }) => {
+  const dispatch = useAppDispatch();
 
-export const Board: React.FC = () => {
-  const [data, setData] = useState<InitialData>({
-    tasks: {},
-    columns: {},
-    columnOrder: [],
-  });
+  const currentBoard = useAppSelector((state) => state.board.currentBoard);
 
+  const { tasks, columns, status } = useAppSelector((state) => state.tasks);
   const onDragEnd = (result: DropResult) => {
     const { destination, source, draggableId } = result;
 
@@ -31,74 +30,114 @@ export const Board: React.FC = () => {
     }
 
     if (
-      destination.droppableId === source.droppableId &&
-      destination.index === source.index
+      (destination.droppableId === source.droppableId &&
+        destination.index === source.index) ||
+      !currentBoard?.id
     ) {
       return;
     }
-
-    const start = data.columns[source.droppableId];
-    const finish = data.columns[destination.droppableId];
-
-    if (start === finish) {
-      const newTaskIds = Array.from(start.taskIds);
-      newTaskIds.splice(source.index, 1);
-      newTaskIds.splice(destination.index, 0, draggableId);
-
-      const newColumn = {
-        ...start,
-        taskIds: newTaskIds,
-      };
-
-      const newState = {
-        ...data,
-        columns: {
-          ...data.columns,
-          [newColumn.id]: newColumn,
+    dispatch(
+      reorderTask({
+        apiRequestBody: {
+          taskId: Number(draggableId),
+          previousOrder: source.index + 1,
+          previousColumnId:
+            columns[source.droppableId as TaskColumnName].columnId,
+          columnId: columns[destination.droppableId as TaskColumnName].columnId,
+          order: destination.index + 1,
+          boardId: currentBoard.id,
         },
-      };
+        contextData: {
+          destination: destination.droppableId as TaskColumnName,
+          taskId: Number(draggableId),
+          futureTaskIndex: destination.index,
+          currentTaskIndex: source.index,
+          source: source.droppableId as TaskColumnName,
+        },
+      }),
+    );
 
-      setData(newState);
-      return;
-    }
+    localStorage.setItem('cacheTasks', JSON.stringify({ tasks, columns }));
 
-    // Moving from one list to another
-    const startTaskIds = Array.from(start.taskIds);
-    startTaskIds.splice(source.index, 1);
-    const newStart = {
-      ...start,
-      taskIds: startTaskIds,
-    };
-
-    const finishTaskIds = Array.from(finish.taskIds);
-    finishTaskIds.splice(destination.index, 0, draggableId);
-    const newFinish = {
-      ...finish,
-      taskIds: finishTaskIds,
-    };
-
-    const newState = {
-      ...data,
-      columns: {
-        ...data.columns,
-        [newStart.id]: newStart,
-        [newFinish.id]: newFinish,
-      },
-    };
-
-    setData(newState);
+    dispatch(
+      changeTasks({
+        destination: destination.droppableId as TaskColumnName,
+        taskId: Number(draggableId),
+        futureTaskIndex: destination.index,
+        currentTaskIndex: source.index,
+        source: source.droppableId as TaskColumnName,
+      }),
+    );
   };
+  const getTaskFromCache = () => {
+    const cacheData = localStorage.getItem('cacheTasks');
+    if (cacheData) {
+      const parsedData = JSON.parse(cacheData);
+      dispatch(setTasksAndColumnsFromCache(parsedData));
+    }
+  };
+  useEffect(() => {
+    switch (status) {
+      case 'failed':
+        getTaskFromCache();
+        break;
+      case 'loading':
+        console.log('loading');
+        break;
+      case 'succeeded':
+        console.log('succeeded');
+    }
+  }, [status]);
+  const cols = Object.keys(tasks) as TaskColumnName[];
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <div className="container">
-        {data.columnOrder.map((columnId) => {
-          const column = data.columns[columnId];
-          const tasks = column.taskIds.map((taskId) => data.tasks[taskId]);
+    <DragDropContext
+      onDragEnd={onDragEnd}
+      autoScrollerOptions={{ startFromPercentage: 0.4 }}
+    >
+      <Stack
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'center',
+          height: '100%',
+          maxHeight: '100%',
 
-          return <TaskList key={column.id} column={column} tasks={tasks} />;
+          padding: PADDING.medium,
+          gap: PADDING.medium,
+          boxSizing: 'border-box',
+          minWidth: '1000px',
+          position: 'relative',
+        }}
+      >
+        {cols.map((el, index) => {
+          return (
+            <TaskColumn
+              data={tasks[el]}
+              title={el}
+              index={columns[el].columnId}
+              key={el}
+            />
+          );
         })}
-      </div>
+        {/*{status === 'loading' ? (*/}
+        {/*  <Box*/}
+        {/*    position={'absolute'}*/}
+        {/*    top={0}*/}
+        {/*    left={0}*/}
+        {/*    bottom={0}*/}
+        {/*    right={0}*/}
+        {/*    display={'flex'}*/}
+        {/*    alignItems={'center'}*/}
+        {/*    justifyContent={'center'}*/}
+        {/*    sx={{ backgroundColor: COLORS.backdrop }}*/}
+        {/*    zIndex={100}*/}
+        {/*    boxSizing={'border-box'}*/}
+        {/*  >*/}
+        {/*    <CircularProgress />*/}
+        {/*  </Box>*/}
+        {/*) : null}*/}
+      </Stack>
     </DragDropContext>
   );
 };

@@ -7,12 +7,14 @@ import { EnvironmentConfigModule } from '../environment-config/environment-confi
 import { EnvironmentConfigService } from '../environment-config/environment-config.service';
 
 import { BoardEntity } from './entities/Board.entity';
+import { BoardColumnType } from './entities/BoardColumnTypes.entity';
 import { CommentEntity } from './entities/Comment.entity';
+import { Event } from './entities/Event.entity';
 import { TaskEntity } from './entities/Task.entity';
 import { TaskHistoryEntity } from './entities/TaskHistory.entity';
 import { TaskOrderEntity } from './entities/TaskOrder.entity';
-import { UpdateEvent } from './entities/UpdateEvent.entity';
 import { UserEntity } from './entities/User.entity';
+import { AddEvents1717337209860 } from './migrations/1717337209860-addEvents';
 
 export const getTypeOrmModuleOptions = (
   config: EnvironmentConfigService,
@@ -23,19 +25,22 @@ export const getTypeOrmModuleOptions = (
   username: config.getDatabaseUser(),
   password: config.getDatabasePassword(),
   database: config.getDatabaseName(),
+
   entities: [
     UserEntity,
     BoardEntity,
     TaskOrderEntity,
     TaskEntity,
-    UpdateEvent,
     TaskHistoryEntity,
     CommentEntity,
+    BoardColumnType,
+    Event,
   ],
-  migrations: [],
-  // migrationsRun: false,
+  migrations: [AddEvents1717337209860],
+  migrationsRun: true,
   // cache: false,
-  synchronize: true,
+  // synchronize: true,
+  logging: true,
 });
 
 @Module({
@@ -47,9 +52,7 @@ export const getTypeOrmModuleOptions = (
       inject: [EnvironmentConfigService],
       useFactory: getTypeOrmModuleOptions,
       dataSourceFactory: async (options) => {
-        const da = await new DataSource(options).initialize();
-
-        return da;
+        return await new DataSource(options).initialize();
       },
     }),
   ],

@@ -1,8 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { google } from 'googleapis';
 import crypto from 'node:crypto';
-import process from 'node:process';
 import { Repository } from 'typeorm';
 
 import { UserEntity } from '../common/config/typeorm/entities/User.entity';
@@ -14,32 +12,32 @@ export class UsersService {
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
   ) {}
-  async authorize(code: string): Promise<{ name: string }> {
-    const oauth2Client = new google.auth.OAuth2(
-      process.env.GOOGLE_CLIENT_ID,
-      process.env.GOOGLE_CLIENT_SECRET,
-      process.env.ORIGIN,
-    );
-    const { tokens } = await oauth2Client.getToken(code);
-    const idToken = await oauth2Client.verifyIdToken({
-      idToken: tokens.id_token,
-    });
-    const profileInfo = idToken.getPayload();
-
-    const user = this.userRepository.create({
-      name: profileInfo.name,
-      uid: profileInfo.sub,
-    });
-
-    await this.userRepository
-      .createQueryBuilder()
-      .insert()
-      .values(user)
-      .orIgnore()
-      .execute();
-
-    return { name: profileInfo.name };
-  }
+  // async authorize(code: string): Promise<{ name: string }> {
+  //   const oauth2Client = new google.auth.OAuth2(
+  //     process.env.GOOGLE_CLIENT_ID,
+  //     process.env.GOOGLE_CLIENT_SECRET,
+  //     process.env.ORIGIN,
+  //   );
+  //   const { tokens } = await oauth2Client.getToken(code);
+  //   const idToken = await oauth2Client.verifyIdToken({
+  //     idToken: tokens.id_token,
+  //   });
+  //   const profileInfo = idToken.getPayload();
+  //
+  //   const user = this.userRepository.create({
+  //     name: profileInfo.name,
+  //     uid: profileInfo.sub,
+  //   });
+  //
+  //   await this.userRepository
+  //     .createQueryBuilder()
+  //     .insert()
+  //     .values(user)
+  //     .orIgnore()
+  //     .execute();
+  //
+  //   return { name: profileInfo.name };
+  // }
 
   generateRandomString(length: number) {
     return crypto
@@ -70,7 +68,7 @@ export class UsersService {
       .values(user)
       .orIgnore()
       .execute();
-    return { name: anonymousAuth.name };
+    return { name: anonymousAuth.name, id: user.id };
   }
 
   findAll() {

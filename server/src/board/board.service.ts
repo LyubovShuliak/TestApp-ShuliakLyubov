@@ -31,15 +31,18 @@ export class BoardService {
   async findOne(id: number) {
     return await this.boardRepository.findOne({ where: { id: id } });
   }
+  async findOneByHash(hash: string) {
+    return await this.boardRepository.findOne({ where: { hash: hash } });
+  }
   async search(query: string) {
-    const boards = await this.boardRepository.find({
-      where: { hash: Like(`%${query}%`) },
-      select: { name: true },
+    return await this.boardRepository.find({
+      where: [{ name: Like(`%${query}%`) }, { hash: Like(`%${query}%`) }],
+      select: { name: true, hash: true, id: true },
     });
-    return boards.map((board) => board.name);
   }
   async update(id: number, updateBoardDto: UpdateBoardDto) {
-    return await this.boardRepository.update({ id: id }, updateBoardDto);
+    await this.boardRepository.update({ id: id }, updateBoardDto);
+    return await this.boardRepository.findOne({ where: { id } });
   }
 
   async remove(id: number) {

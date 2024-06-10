@@ -1,43 +1,70 @@
-import * as jwt_decode from 'jwt-decode';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
+import { BoardTitle } from '../components/header/BoardTitle';
 import { Board } from '../components/tasks/Board';
-import { ROUTES } from '../resources/routes-constants';
+import { PADDING } from '../resources/constants/gutter.constants';
+import { ROUTES } from '../resources/constants/routes-constants';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { getBoardByHash } from '../store/slices/board/board.thunk';
 
-import { CredentialResponse } from '@react-oauth/google';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
 
 export const BoardPage: React.FC = () => {
-  const [user, setUser] = useState<CredentialResponse>({});
-  const [profile, setProfile] = useState([]);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const dispatch = useAppDispatch();
+
+  const board = useAppSelector((state) => state.board.currentBoard);
+
+  const ref = useRef<HTMLDivElement | null>(null);
+
   useEffect(() => {
-    if (user.credential) {
-      const decodedToken = jwt_decode.jwtDecode(user.credential);
-      // setUser(decodedToken);
-
-      console.log('User information:', decodedToken);
+    const boardHashFromUrl = location.pathname
+      .replace(`${ROUTES.BOARD_ROUTE.route}`, '')
+      .slice(1);
+    if (boardHashFromUrl) {
+      dispatch(getBoardByHash(boardHashFromUrl));
     }
-  }, [user]);
-
-  // log out function to log the user out of google and set the profile array to null
-  // const logOut = () => {
-  //   googleLogout();
-  //   setProfile(null);
-  // };
-
+  }, []);
+  useEffect(() => {
+    if (!board) {
+      navigate('/board');
+    }
+  }, [board]);
   return (
-    <div
-      style={{
+    <Box
+      sx={{
         position: 'relative',
-        width: '100%',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'column',
+        height: '100vh',
+
+        width: '100vw',
       }}
     >
-      <h1 style={{ fontSize: '4em' }}>{ROUTES.BOARD_ROUTE.name}</h1>
+      <Toolbar />
+      {board ? (
+        <BoardTitle name={board?.name} hash={board?.hash} id={board?.id} />
+      ) : null}
 
-      <Board />
-    </div>
+      <Box
+        sx={{
+          height: '100%',
+          maxHeight: '100%',
+          width: '100%',
+          overflow: 'scroll',
+          padding: PADDING.medium,
+          boxSizing: 'border-box',
+        }}
+        ref={ref}
+      >
+        <Board containerRef={ref} />
+      </Box>
+    </Box>
   );
 };
