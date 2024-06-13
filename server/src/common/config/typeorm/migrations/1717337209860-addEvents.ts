@@ -8,11 +8,7 @@ export class AddEvents1717337209860 implements MigrationInterface {
     await queryRunner.query(`
       INSERT INTO "events" ("name")
       VALUES 
-        ('Reordered'),
-        ('Title edited'),
-        ('Description edited'),
         ('Status changed'),
-        ('Board created'),
         ('Task created')
     `);
   }

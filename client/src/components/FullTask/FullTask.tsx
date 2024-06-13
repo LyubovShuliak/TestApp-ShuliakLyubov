@@ -79,7 +79,7 @@ export const FullTask = ({
   const history = useAppSelector((state) => state.tasks.history[taskId]);
 
   useEffect(() => {
-    if (comments && comments.length) {
+    if (comments) {
       dispatch(changeCommentsCount({ taskId, status, count: comments.length }));
     }
   }, [comments]);

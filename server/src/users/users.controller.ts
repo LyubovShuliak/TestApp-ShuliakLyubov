@@ -72,13 +72,9 @@ export class UsersController {
         expiresIn: '1d',
         secret: jwtConstants.secret,
       }),
-      {
-        httpOnly: process.env.NODE_ENV === 'production',
-        secure: process.env.NODE_ENV === 'production',
-        signed: process.env.NODE_ENV === 'production',
-      },
+      { httpOnly: true, sameSite: 'none' },
     );
-
+    res.setHeader('Cache-Control', 'private');
     return { ...anonymousUser, status: false };
   }
   @Get()

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useParams } from 'react-router-dom';
 
 import background from './assets/images/img.png';
 import Header from './components/header/Header';
@@ -13,28 +13,31 @@ import Box from '@mui/material/Box';
 const App: React.FC = () => {
   const dispatch = useAppDispatch();
   const board = useAppSelector((state) => state.board.currentBoard);
-  const status = useAppSelector((state) => state.board.status);
+  const boardStatus = useAppSelector((state) => state.board.status);
+  const taskStatus = useAppSelector((state) => state.tasks.status);
 
   useEffect(() => {
     if (board?.id) {
       dispatch(getTasksForBoard(board.id));
     }
   }, [board]);
+  const params = useParams();
+  useEffect(() => {
+    console.log(params);
+  }, []);
   return (
     <Box
       component={'main'}
       sx={{
         display: 'flex',
         backgroundImage: `url(${background})`,
-
         backgroundRepeat: 'no-repeat',
-
         backgroundSize: 'cover',
       }}
     >
       <Header />
       <Outlet />
-      {status === 'loading' ? (
+      {boardStatus === 'loading' || taskStatus == 'loading' ? (
         <Box
           position={'absolute'}
           top={0}

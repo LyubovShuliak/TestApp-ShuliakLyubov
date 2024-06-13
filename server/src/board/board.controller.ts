@@ -9,11 +9,9 @@ import {
   Patch,
   Post,
   Query,
+  Req,
   UnprocessableEntityException,
-  UseGuards,
 } from '@nestjs/common';
-
-import { JwtGuard } from '../common/guards/jwt.gaurd';
 
 import { CreateBoardDto } from './dto/create-board.dto';
 import { UpdateBoardDto } from './dto/update-board.dto';
@@ -24,9 +22,9 @@ export class BoardController {
   constructor(private readonly boardService: BoardService) {}
 
   @Post()
-  @UseGuards(JwtGuard)
   async create(
     @Body() createBoardDto: CreateBoardDto,
+    @Req() req: Request,
   ): Promise<
     | { name: string; hash: string }
     | UnprocessableEntityException

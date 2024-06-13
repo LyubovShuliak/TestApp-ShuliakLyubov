@@ -58,8 +58,9 @@ const commentsSlice = createSlice({
         const commentIndex = state.comments[action.payload.taskId].findIndex(
           (el) => el.commentId === action.payload.commentId,
         );
-
+        console.log(commentIndex);
         state.comments[action.payload.taskId].splice(commentIndex, 1);
+        console.log(state.comments[action.payload.taskId].length);
       }
       state.status = 'succeeded';
     });

@@ -3,7 +3,7 @@ import { AxiosResponse } from 'axios';
 import { api } from '../../../resources/constants/api-constants';
 import { AppDispatch, RootState } from '../../store';
 
-import { updateTaskData } from './tasks.slice';
+import { addNotCreatedTask, updateTaskData } from './tasks.slice';
 import {
   ContextData,
   CreatedTask,
@@ -103,17 +103,31 @@ export const updateTask = createAsyncThunk<
 );
 
 export const createTask = createAsyncThunk<
-  CreatedTask,
-  CreateTaskI,
-  { rejectValue: string }
->('tasks/create', async (newTask, { rejectWithValue }) => {
+  { taskData: CreatedTask; fakeIndex: number },
+  CreateTaskI & { columnName: TaskColumnName; fakeIndex: number },
+  { rejectValue: string; dispatch: AppDispatch }
+>('tasks/create', async (newTask, { rejectWithValue, dispatch }) => {
   try {
+    dispatch(
+      addNotCreatedTask({
+        columnName: newTask.columnName,
+        task: {
+          history: [],
+          created: false,
+          id: newTask.fakeIndex,
+          description: '',
+          title: newTask.title,
+          commentsCount: 0,
+        },
+      }),
+    );
     const createdTask = await api.post<
       CreatedTask,
       AxiosResponse<CreatedTask>,
       CreateTaskI
     >(`/tasks`, newTask);
-    return createdTask.data;
+
+    return { taskData: createdTask.data, fakeIndex: newTask.fakeIndex };
   } catch (err) {
     return rejectWithValue('Error!');
   }

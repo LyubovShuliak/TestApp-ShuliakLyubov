@@ -23,6 +23,7 @@ export interface TaskTileData {
   commentsCount: number;
   description: string;
   history: HistoryItem[];
+  created: boolean;
 }
 export interface CreatedTask {
   columnName: TaskColumnName;

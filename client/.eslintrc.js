@@ -61,7 +61,7 @@ module.exports = {
       },
     ],
     'react-hooks/rules-of-hooks': 'warn',
-    'react-hooks/exhaustive-deps': 'warn',
+    'react-hooks/exhaustive-deps': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     'no-console': 'off',
     'prettier/prettier': 'off',
@@ -83,6 +83,7 @@ module.exports = {
       },
     ],
     'unused-imports/no-unused-imports': 'error',
+    '@typescript-eslint/no-non-null-assertion': 'off',
   },
   settings: {
     react: {

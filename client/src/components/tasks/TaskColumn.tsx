@@ -86,6 +86,7 @@ export const TaskColumn = ({ data, title, index }: Props) => {
                   description={item.description}
                   status={title}
                   history={item.history}
+                  created={item.created}
                 />
               ))}
               {provided.placeholder}

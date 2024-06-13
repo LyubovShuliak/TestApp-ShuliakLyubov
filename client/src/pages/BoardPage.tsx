@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import { BoardTitle } from '../components/header/BoardTitle';
 import { Board } from '../components/tasks/Board';
@@ -14,26 +14,23 @@ import Toolbar from '@mui/material/Toolbar';
 export const BoardPage: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
-
+  const params = useParams();
   const dispatch = useAppDispatch();
 
   const board = useAppSelector((state) => state.board.currentBoard);
 
   const ref = useRef<HTMLDivElement | null>(null);
-
   useEffect(() => {
-    const boardHashFromUrl = location.pathname
-      .replace(`${ROUTES.BOARD_ROUTE.route}`, '')
-      .slice(1);
+    const boardHashFromUrl = params.boardId;
     if (boardHashFromUrl) {
-      dispatch(getBoardByHash(boardHashFromUrl));
+      dispatch(getBoardByHash(boardHashFromUrl)).then(() => {
+        if (!board?.hash) {
+          navigate(`${ROUTES.BOARD_ROUTE.route}`, { replace: true });
+        }
+      });
     }
   }, []);
-  useEffect(() => {
-    if (!board) {
-      navigate('/board');
-    }
-  }, [board]);
+
   return (
     <Box
       sx={{
@@ -63,7 +60,7 @@ export const BoardPage: React.FC = () => {
         }}
         ref={ref}
       >
-        <Board containerRef={ref} />
+        {board ? <Board containerRef={ref} /> : null}
       </Box>
     </Box>
   );

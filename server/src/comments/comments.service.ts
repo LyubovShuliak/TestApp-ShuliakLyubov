@@ -60,7 +60,18 @@ export class CommentsService {
     );
   }
 
-  remove(id: number) {
-    return this.commentsRepository.delete({ id: id });
+  async remove(id: number) {
+    const commentToDelete = await this.commentsRepository.findOne({
+      where: { id: id },
+    });
+    await this.commentsRepository
+      .createQueryBuilder()
+      .update(TaskEntity)
+      .set({ commentsCount: () => 'commentsCount - 1' })
+      .where('id = :taskId', {
+        taskId: commentToDelete.taskId,
+      })
+      .execute();
+    await this.commentsRepository.delete({ id });
   }
 }

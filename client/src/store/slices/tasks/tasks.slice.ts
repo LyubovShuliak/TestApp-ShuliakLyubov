@@ -120,6 +120,13 @@ const tasksSlice = createSlice({
     setLoading: (state) => {
       state.status = 'loading';
     },
+    addNotCreatedTask: (state, action: PayloadAction<CreatedTask>) => {
+      state.tasks[action.payload.columnName].push(action.payload.task);
+      state.columns[action.payload.columnName].taskIds.push(
+        action.payload.task.id,
+      );
+      console.log([...state.columns[action.payload.columnName].taskIds]);
+    },
     updateTaskData: (
       state,
       action: PayloadAction<{
@@ -153,11 +160,17 @@ const tasksSlice = createSlice({
     builder.addCase(getTasksForBoard.fulfilled, (state, action) => {
       state.tasks = action.payload.tasks;
       state.columns = action.payload.columns;
-      Object.values(action.payload.tasks).forEach((el) => {
-        el.forEach((task) => (state.history[task.id] = task.history));
+      Object.entries(action.payload.tasks).forEach(([key, tasks]) => {
+        tasks.forEach((task, index) => {
+          state.tasks[key as TaskColumnName][index].created = true;
+          state.history[task.id] = task.history;
+        });
       });
+      state.status = 'succeeded';
     });
-
+    builder.addCase(getTasksForBoard.pending, (state, action) => {
+      state.status = 'loading';
+    });
     builder.addCase(reorderTask.pending, (state) => {
       state.status = 'loading';
     });
@@ -182,18 +195,30 @@ const tasksSlice = createSlice({
     });
     builder.addCase(
       createTask.fulfilled,
-      (state, action: PayloadAction<CreatedTask>) => {
+      (
+        state,
+        {
+          payload: { taskData, fakeIndex },
+        }: PayloadAction<{ taskData: CreatedTask; fakeIndex: number }>,
+      ) => {
         state.status = 'succeeded';
-        state.tasks[action.payload.columnName].push(action.payload.task);
-        state.columns[action.payload.columnName].taskIds.push(
-          action.payload.task.id,
+        state.tasks[taskData.columnName].splice(
+          state.columns[taskData.columnName].taskIds.indexOf(fakeIndex),
+          1,
+          { ...taskData.task, created: true },
         );
-        state.history[action.payload.task.id] = action.payload.task.history;
+        state.columns[taskData.columnName].taskIds.splice(
+          state.columns[taskData.columnName].taskIds.indexOf(fakeIndex),
+          1,
+          taskData.task.id,
+        );
+        state.history[taskData.task.id] = taskData.task.history;
       },
     );
     builder.addCase(createTask.rejected, (state) => {
       state.status = 'failed';
     });
+
     builder.addCase(
       deleteTask.fulfilled,
       (
@@ -230,5 +255,6 @@ export const {
   updateTaskData,
   setTasksAndColumnsFromCache,
   changeTasks,
+  addNotCreatedTask,
 } = tasksSlice.actions; // If you have other actions, you can define them here
 export const tasksReducer = tasksSlice.reducer;

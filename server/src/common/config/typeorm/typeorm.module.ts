@@ -14,8 +14,7 @@ import { TaskEntity } from './entities/Task.entity';
 import { TaskHistoryEntity } from './entities/TaskHistory.entity';
 import { TaskOrderEntity } from './entities/TaskOrder.entity';
 import { UserEntity } from './entities/User.entity';
-import { AddEvents1717337209860 } from './migrations/1717337209860-addEvents';
-
+import { Init1717962142925 } from './migrations/1717962142925-init';
 export const getTypeOrmModuleOptions = (
   config: EnvironmentConfigService,
 ): TypeOrmModuleOptions => ({
@@ -36,11 +35,12 @@ export const getTypeOrmModuleOptions = (
     BoardColumnType,
     Event,
   ],
-  migrations: [AddEvents1717337209860],
+  migrations: [Init1717962142925],
   migrationsRun: true,
   // cache: false,
   // synchronize: true,
   logging: true,
+  ssl: true,
 });
 
 @Module({

@@ -48,12 +48,12 @@ export const BoardSearch = () => {
 
   useEffect(() => {
     if (currentBoard) {
-      navigate(`${ROUTES.BOARD_ROUTE.route}/${currentBoard.hash}`);
+      navigate(`${ROUTES.BOARD_ROUTE.route}/${currentBoard.hash}`, {
+        relative: 'path',
+      });
     }
   }, [currentBoard]);
-  useEffect(() => {
-    console.log(value);
-  }, [value]);
+
   return (
     <Box pl={2} pr={2} flexGrow={1}>
       <Autocomplete
@@ -64,7 +64,7 @@ export const BoardSearch = () => {
         popupIcon={null}
         options={boards}
         inputValue={value}
-        onChange={(_e, value) => {
+        onChange={(_, value) => {
           if (value) onChange(value);
         }}
         isOptionEqualToValue={(option, value) => {
@@ -105,7 +105,7 @@ export const BoardSearch = () => {
             </ListItem>
           );
         }}
-        onInputChange={(_event, value) => onInputChange(value)}
+        onInputChange={(_, value) => onInputChange(value)}
         renderInput={(params) => (
           <TextField
             {...params}

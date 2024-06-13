@@ -8,11 +8,7 @@ type Props = {
   commentsCount: number;
   handleTaskDelete: () => void;
 };
-export const TaskActions: FC<Props> = ({ commentsCount, handleTaskDelete }) => {
-  const onEditClick = () => {
-    console.log('onEditClick');
-  };
-
+export const TaskActions: FC<Props> = ({ commentsCount }) => {
   return (
     <CardActions
       disableSpacing

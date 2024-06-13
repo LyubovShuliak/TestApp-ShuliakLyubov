@@ -20,7 +20,6 @@ export const DescriptionComponent: FC<Props> = ({
   const [value, setValue] = useState(description);
   const task = useAppSelector((state) => state.tasks.tasks[column][index]);
   const dispatch = useAppDispatch();
-  console.log(description);
   return (
     <Box
       sx={{

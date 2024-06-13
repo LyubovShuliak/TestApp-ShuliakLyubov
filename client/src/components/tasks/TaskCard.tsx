@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { COLORS } from '../../resources/constants/color.constants';
 import { useAppDispatch } from '../../store/hooks';
@@ -12,6 +12,8 @@ import { FullTask } from '../FullTask/FullTask';
 import { TaskActions } from './TaskActions';
 
 import { Draggable } from '@hello-pangea/dnd';
+import { CircularProgress } from '@mui/material';
+import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
 
@@ -30,6 +32,7 @@ export const TaskCard = ({
   description,
   status,
   history,
+  created,
 }: Props) => {
   const dispatch = useAppDispatch();
 
@@ -45,14 +48,16 @@ export const TaskCard = ({
 
   const handleTaskDelete = () =>
     dispatch(deleteTask({ index, id, columnName: status }));
-
+  useEffect(() => {
+    console.log(commentsCount);
+  }, [commentsCount]);
   return (
     <>
       <Draggable draggableId={id.toString()} index={index}>
         {(provided: any) => (
           <Card
             onClick={(event: any) => {
-              handleOpen();
+              if (created) handleOpen();
             }}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
@@ -88,6 +93,22 @@ export const TaskCard = ({
               handleTaskDelete={handleTaskDelete}
               commentsCount={commentsCount}
             />
+            {!created ? (
+              <Box
+                position={'absolute'}
+                top={0}
+                left={0}
+                bottom={0}
+                right={0}
+                display={'flex'}
+                alignItems={'center'}
+                justifyContent={'center'}
+                sx={{ backgroundColor: COLORS.backdrop }}
+                zIndex={100}
+              >
+                <CircularProgress />
+              </Box>
+            ) : null}
           </Card>
         )}
       </Draggable>

@@ -27,6 +27,8 @@ export const TaskCreateForm: FC<Props> = ({
 
   const handleCreateTask = () => {
     if (value && currentBoard && user) {
+      const fakeIndex = tasks.length ? -tasks.length : -1;
+
       dispatch(
         createTask({
           boardId: currentBoard.id,
@@ -36,6 +38,8 @@ export const TaskCreateForm: FC<Props> = ({
           order: tasks.length + 1,
           status: columnId,
           date: new Date(),
+          fakeIndex: fakeIndex,
+          columnName: columnName,
         }),
       );
     }

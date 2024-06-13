@@ -4,5 +4,5 @@ export const COLORS = {
   borderColor: '#2b85cd',
   dark: '#ececec',
   textDark: '#a19797',
-  backdrop: 'rgba(35,33,33,0.67)',
+  backdrop: 'rgba(35,33,33,0.08)',
 };
