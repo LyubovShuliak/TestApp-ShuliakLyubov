@@ -70,7 +70,7 @@ The Task Manager is a versatile project management tool that enables you to effi
 
 ### Screencast
 
-For a quick overview and demonstration of the Task Manager features, watch our [screencast(https://drive.google.com/file/d/1RJEq9zudlRFZW--fADvvOzWzNf2CIqly/view?usp=sharing).
+For a quick overview and demonstration of the Task Manager features, watch our [screencast](https://drive.google.com/file/d/1RJEq9zudlRFZW--fADvvOzWzNf2CIqly/view?usp=sharing).
 
 ![Screencast](https://drive.google.com/file/d/1RJEq9zudlRFZW--fADvvOzWzNf2CIqly/view?usp=sharing)
 
