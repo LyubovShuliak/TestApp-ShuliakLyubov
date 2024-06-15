@@ -50,17 +50,11 @@ const commentsSlice = createSlice({
     });
     builder.addCase(deleteComment.fulfilled, (state, action) => {
       if (state.comments[action.payload.taskId]) {
-        // state.comments[action.payload.taskId] = state.comments[
-        //   action.payload.taskId
-        // ].filter((el) => {
-        //   return el.commentId !== action.payload.commentId;
-        // });
         const commentIndex = state.comments[action.payload.taskId].findIndex(
           (el) => el.commentId === action.payload.commentId,
         );
-        console.log(commentIndex);
+
         state.comments[action.payload.taskId].splice(commentIndex, 1);
-        console.log(state.comments[action.payload.taskId].length);
       }
       state.status = 'succeeded';
     });

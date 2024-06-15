@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { BoardTitle } from '../components/header/BoardTitle';
 import { Board } from '../components/tasks/Board';
@@ -12,7 +12,6 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 
 export const BoardPage: React.FC = () => {
-  const location = useLocation();
   const navigate = useNavigate();
   const params = useParams();
   const dispatch = useAppDispatch();
@@ -20,6 +19,7 @@ export const BoardPage: React.FC = () => {
   const board = useAppSelector((state) => state.board.currentBoard);
 
   const ref = useRef<HTMLDivElement | null>(null);
+
   useEffect(() => {
     const boardHashFromUrl = params.boardId;
     if (boardHashFromUrl) {
@@ -60,7 +60,7 @@ export const BoardPage: React.FC = () => {
         }}
         ref={ref}
       >
-        {board ? <Board containerRef={ref} /> : null}
+        {board ? <Board /> : null}
       </Box>
     </Box>
   );

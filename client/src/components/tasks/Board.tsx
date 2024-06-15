@@ -14,9 +14,7 @@ import { TaskColumn } from './TaskColumn';
 import { DragDropContext, DropResult } from '@hello-pangea/dnd';
 import { Stack } from '@mui/material';
 
-export const Board: React.FC<{
-  containerRef: React.MutableRefObject<HTMLDivElement | null>;
-}> = ({ containerRef }) => {
+export const Board: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const currentBoard = useAppSelector((state) => state.board.currentBoard);

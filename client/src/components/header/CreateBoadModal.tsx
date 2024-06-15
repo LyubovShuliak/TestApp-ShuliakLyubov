@@ -33,7 +33,7 @@ export const CreateBoardModal: FC<{
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 400,
+
     bgcolor: 'background.paper',
 
     boxShadow: 24,
@@ -120,17 +120,59 @@ export const CreateBoardModal: FC<{
       >
         <Fade in={open}>
           <Box sx={style}>
-            <h2 id="simple-modal-title">Create Board</h2>
+            <Typography
+              variant={'h4'}
+              pb={'10px'}
+              sx={{
+                [up('md')]: {
+                  fontSize: '2rem',
+                },
+                [between('sm', 'md')]: {
+                  fontSize: '1.6rem',
+                },
+                [down('sm')]: {
+                  fontSize: '1rem',
+                },
+              }}
+            >
+              Create Board
+            </Typography>
             <TextField
               id="board-name"
               label="Board Name"
               variant="outlined"
               fullWidth
+              size={'small'}
               value={boardName}
+              InputLabelProps={{
+                size: 'small',
+              }}
               onChange={(e) => setBoardName(e.target.value)}
-              style={{ marginBottom: '20px' }}
+              sx={{
+                '&.MuiFormLabel-root': {
+                  [up('md')]: {
+                    fontSize: '0.75rem',
+                  },
+                  [between('sm', 'md')]: {
+                    fontSize: '0.7rem',
+                  },
+                  [down('sm')]: {
+                    fontSize: '0.45rem',
+                  },
+                },
+                marginBottom: '20px',
+              }}
             />
-            <Button variant="contained" color="primary" onClick={handleCreate}>
+            <Button
+              variant="contained"
+              sx={{
+                [down('sm')]: {
+                  width: '100%',
+                },
+              }}
+              color="primary"
+              onClick={handleCreate}
+            >
               Create
             </Button>
           </Box>

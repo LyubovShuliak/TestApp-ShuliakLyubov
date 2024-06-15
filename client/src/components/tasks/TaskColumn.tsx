@@ -31,7 +31,8 @@ export const TaskColumn = ({ data, title, index }: Props) => {
 
   useEffect(() => {
     ref.current?.scrollIntoView();
-  }, [showForm, data.length]);
+  }, [showForm]);
+
   return (
     <Stack
       display="flex"

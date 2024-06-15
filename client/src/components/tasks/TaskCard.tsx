@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import { COLORS } from '../../resources/constants/color.constants';
 import { useAppDispatch } from '../../store/hooks';
@@ -48,9 +48,7 @@ export const TaskCard = ({
 
   const handleTaskDelete = () =>
     dispatch(deleteTask({ index, id, columnName: status }));
-  useEffect(() => {
-    console.log(commentsCount);
-  }, [commentsCount]);
+
   return (
     <>
       <Draggable draggableId={id.toString()} index={index}>

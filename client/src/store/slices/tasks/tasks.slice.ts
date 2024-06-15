@@ -125,7 +125,6 @@ const tasksSlice = createSlice({
       state.columns[action.payload.columnName].taskIds.push(
         action.payload.task.id,
       );
-      console.log([...state.columns[action.payload.columnName].taskIds]);
     },
     updateTaskData: (
       state,

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Outlet, useParams } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 
 import background from './assets/images/img.png';
 import Header from './components/header/Header';
@@ -21,10 +21,7 @@ const App: React.FC = () => {
       dispatch(getTasksForBoard(board.id));
     }
   }, [board]);
-  const params = useParams();
-  useEffect(() => {
-    console.log(params);
-  }, []);
+
   return (
     <Box
       component={'main'}
