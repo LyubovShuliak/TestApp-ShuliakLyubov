@@ -35,7 +35,9 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint --cache .",
-    "format": "prettier --check ."
+    "format": "prettier --check .",
+    "predeploy" : "npm run build",
+    "deploy" : "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": "react-app"
